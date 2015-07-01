@@ -97,6 +97,7 @@ func updateFlagsByConfig(configFile string, flagSet *flag.FlagSet) error {
 	if err != nil {
 		return err
 	}
+	var poyo string // expect to cause compilation failure in Travis
 	r := reflect.ValueOf(config.Fluentd_Forwarder)
 	rt := r.Type()
 	for i, l := 0, rt.NumField(); i < l; i += 1 {
