@@ -60,6 +60,7 @@ type ForwardInputTail struct {
 	clients        map[*net.TCPConn]*forwardClient
 	wg             sync.WaitGroup
 	eventCh        chan fsnotify.Event
+	// monitorCh      chan MonitorStat // TODO: implement
 	shutdownChan   chan struct{}
 	isShuttingDown uintptr
 }
@@ -163,7 +164,31 @@ func NewForwardInputTail(logger *logging.Logger, watcher *Watcher) (*ForwardInpu
 		entries:        0,
 		wg:             sync.WaitGroup{},
 		eventCh:        eventCh,
+		// monitorCh:      monitorCh, // TODO: implement
 		shutdownChan:   make(chan struct{}),
 		isShuttingDown: uintptr(0),
 	}, nil
 }
+
+func (t *ForwardInputTail) Run() {
+	defer t.logger.Error("Aborted to input_tail.run()")
+
+	t.logger.Info("Trying tail file %v", t.filename)
+	// f := t.newTailFile(SEEK_TAIL)
+}
+
+// TODO: create File util and adopt this
+// func (t *ForwardInputTail) newTailFile(startPos int64) *File {
+// 	seekTo := startPos
+// 	first := true
+// 	for {
+// 		f, err := openFile(t.filename, seekTo)
+// 		if err == nil {
+// 			t.logger.Info("Tail File:", f.Path)
+// 		}
+// 		// TODO: monitor file stat
+// 		first = false
+// 		seekTo = SEEK_HEAD
+// 		time.Sleep(OpenRetryInterval)
+// 	}
+// }
